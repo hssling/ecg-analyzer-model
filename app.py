@@ -23,7 +23,7 @@ if ADAPTER_ID:
     except Exception as e:
         print(f"Failed to load adapter. Using base model. Error: {e}")
 
-def diagnose_ecg(image: Image.Image = None, temp: float = 0.2, max_tokens: int = 1500):
+def diagnose_ecg(image: Image.Image = None, temp: float = 0.4, max_tokens: int = 2000):
     try:
         if image is None:
             return json.dumps({"error": "No image provided."})
@@ -69,8 +69,8 @@ demo = gr.Interface(
     fn=diagnose_ecg,
     inputs=[
         gr.Image(type="pil", label="ECG Image Scan"),
-        gr.Slider(minimum=0.0, maximum=1.0, value=0.2, step=0.1, label="Temperature"),
-        gr.Slider(minimum=256, maximum=4096, value=1500, step=256, label="Max Tokens")
+        gr.Slider(minimum=0.0, maximum=1.0, value=0.4, step=0.1, label="Temperature"),
+        gr.Slider(minimum=256, maximum=4096, value=2000, step=256, label="Max Tokens")
     ],
     outputs=gr.Markdown(label="Clinical Report Output"),
     title="CardioAI Inference API",
