@@ -7,7 +7,7 @@ from huggingface_hub import login
 
 # 1. Configuration targeting ECG Image Scans
 MODEL_ID = "Qwen/Qwen2-VL-2B-Instruct" 
-DATASET_ID = "edcci/GenECG"
+DATASET_ID = "IdaFLab/ECG-Plot-Images"
 OUTPUT_DIR = "./cardioai-adapter"
 HF_HUB_REPO = "hssling/cardioai-adapter" 
 
@@ -46,8 +46,8 @@ def main():
     
     print(f"Loading dataset: {DATASET_ID}")
     try:
-        # edcci/GenECG contains real generated image matrices of PTB-XL
-        dataset = load_dataset(DATASET_ID, "A", split="train[:2000]") 
+        # Load high-quality synthetic/real ECG plots in Parquet format to prevent HTTP bottleneck 
+        dataset = load_dataset(DATASET_ID, split="train[:2000]") 
     except Exception as e:
         print(f"Warning: {DATASET_ID} not found. Synthesizing a robust mock dataset for algorithmic testing.")
         from datasets import Dataset
@@ -59,7 +59,16 @@ def main():
         dataset = Dataset.from_dict({"image": dummy_images, "findings": dummy_findings})
     
     def format_data(example):
-        findings = "Standard clinical 12-lead ECG tracing. Real signal derived from PTB-XL."
+        label_map = {
+            0: "Normal Sinus Rhythm. No significant ectopic activity.",
+            1: "Supraventricular Ectopic Beat (SVEB). Premature atrial or junctional contraction.",
+            2: "Ventricular Ectopic Beat (VEB). Premature ventricular contraction.",
+            3: "Fusion of ventricular and normal beat."
+        }
+        # In IdaFLab/ECG-Plot-Images, label is stored in 'type'
+        lbl = example.get("type", 0)
+        findings = label_map.get(lbl, "Standard clinical ECG tracing.")
+        
         messages = [
             {
                 "role": "system",
