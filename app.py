@@ -77,5 +77,4 @@ demo = gr.Interface(
     description="Fine-tuned Medical LLM for Electrocardiogram (ECG) Tracings."
 )
 
-if __name__ == "__main__":
-    demo.launch(server_name="0.0.0.0", server_port=7860)
+
