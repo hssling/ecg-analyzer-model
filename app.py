@@ -77,4 +77,5 @@ demo = gr.Interface(
     description="Fine-tuned Medical LLM for Electrocardiogram (ECG) Tracings."
 )
 
-
+if __name__ == "__main__":
+    demo.launch()
