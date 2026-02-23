@@ -7,7 +7,7 @@ from huggingface_hub import login
 
 # 1. Configuration targeting ECG Image Scans
 MODEL_ID = "Qwen/Qwen2-VL-2B-Instruct" 
-DATASET_ID = "hssling/ECG-10k-Control"
+DATASET_ID = "PULSE-ECG/ECGInstruct"
 OUTPUT_DIR = "./cardioai-adapter"
 HF_HUB_REPO = "hssling/cardioai-adapter" 
 
@@ -46,7 +46,7 @@ def main():
     
     print(f"Loading dataset: {DATASET_ID}")
     try:
-        dataset = load_dataset(DATASET_ID, split="train") # Using the full 10k ECG dataset
+        dataset = load_dataset(DATASET_ID, split="train[:10000]") # Using 10k real ECG items
     except Exception as e:
         print(f"Warning: {DATASET_ID} not found. Synthesizing a robust mock dataset for algorithmic testing.")
         from datasets import Dataset
@@ -58,7 +58,7 @@ def main():
         dataset = Dataset.from_dict({"image": dummy_images, "findings": dummy_findings})
     
     def format_data(example):
-        findings = example.get("findings") or example.get("text") or example.get("description") or "ECG tracing findings."
+        findings = example.get("findings") or example.get("output") or example.get("text") or example.get("description") or "ECG tracing findings."
         messages = [
             {
                 "role": "system",
