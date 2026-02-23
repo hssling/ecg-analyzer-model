@@ -1,0 +1,8 @@
+torch>=2.0
+transformers>=4.40.0
+accelerate
+peft
+bitsandbytes
+datasets
+gradio>=4.0.0
+Pillow
