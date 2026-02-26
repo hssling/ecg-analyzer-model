@@ -1,0 +1,5 @@
+{
+  "base_model": "Qwen/Qwen2-VL-2B-Instruct",
+  "adapter_repo": "hssling/cardioai-adapter",
+  "adapter_revision": "9aca394c57a984d7d314d36decff40f72858538a"
+}
