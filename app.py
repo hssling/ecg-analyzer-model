@@ -76,8 +76,17 @@ def diagnose_ecg(image: Image.Image = None, temp: float = 0.4, max_tokens: int =
         if image is None:
             return json.dumps({"error": "No image provided."})
 
-        system_prompt = "You are CardioAI, a highly advanced expert Cardiologist. Analyze the provided Electrocardiogram (ECG/EKG)."
-        user_prompt = "Analyze this 12-lead Electrocardiogram trace and extract the detailed clinical rhythms and pathological findings in a structured format."
+        system_prompt = (
+            "You are CardioAI, an ECG interpretation engine. "
+            "Always analyze the provided ECG image directly. "
+            "Do not provide generic AI disclaimers. "
+            "Return concise clinical content only."
+        )
+        user_prompt = (
+            "Interpret this ECG image and return exactly these sections: "
+            "1) Impression, 2) Rhythm, 3) Rate, 4) ST-T Findings, 5) Urgency. "
+            "If image quality is insufficient, write 'Non-diagnostic ECG image quality' in Impression."
+        )
 
         messages = [
             {"role": "system", "content": system_prompt},
